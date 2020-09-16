@@ -68,6 +68,19 @@ char	*path_cmd(char *cmd, char *path)
 	return (str);
 }
 
+int		ft_exit(char *cmd_line, char **tmp_line, char *cmd, int  size)
+{
+	if (size == 1 && ft_strcmp(cmd, "exit") == 0)
+	{
+		free(cmd_line);
+		free_dac(tmp_line);
+		free(cmd);
+		return (0);
+	}
+	else
+		return (1);
+}
+
 int		run_cmd(char *cmd_line, char ***envp)
 {
 	char	*cmd;
@@ -79,7 +92,7 @@ int		run_cmd(char *cmd_line, char ***envp)
 	if (size == 0)
 		return (1);
 	cmd = ft_strdup(tmp_line[0]);
-	if (size == 1 && ft_strcmp(cmd, "exit") == 0)
+	if (ft_exit(cmd_line, tmp_line, cmd_line, size) == 0)
 		return (0);
 	prmtrs = cr_prmtrs(tmp_line, size);
 	if (impl_cmd(cmd))
