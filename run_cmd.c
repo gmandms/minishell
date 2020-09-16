@@ -92,7 +92,7 @@ int		run_cmd(char *cmd_line, char ***envp)
 	if (size == 0)
 		return (1);
 	cmd = ft_strdup(tmp_line[0]);
-	if (ft_exit(cmd_line, tmp_line, cmd_line, size) == 0)
+	if (ft_exit(cmd_line, tmp_line, cmd, size) == 0)
 		return (0);
 	prmtrs = cr_prmtrs(tmp_line, size);
 	if (impl_cmd(cmd))
