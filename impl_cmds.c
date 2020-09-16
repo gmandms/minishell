@@ -1,28 +1,5 @@
 #include "minishell.h"
 
-void	cd(char **prmtrs, char **env)
-{
-	char	*pwd;
-
-	if (size_dac(prmtrs) > 2)
-	{
-		ft_printf("cd: lot arguments\n");
-		return ;
-	}
-	if (ft_strcmp(prmtrs[0], "cd") == 0)
-	{
-		if (chdir(prmtrs[1]) == 0)
-		{
-			pwd = cr_pwd(NULL);
-			ch_env(env, pwd, "PWD");
-			free(pwd);
-			return ;
-		}
-		else
-			ft_printf("cd: 4to-to TToLLlo He Tak\n");
-	}
-}
-
 void	env(char **envp)
 {
 	int	i;
@@ -44,13 +21,15 @@ void	choice(char *cmd, char **prmtrs, char ***envp)
 		env(envp[0]);
 	else if (ch == 2)
 		cd(prmtrs, envp[0]);
+	else if (ch == 3)
+		ft_echo(prmtrs, envp[0]);
 	else if (ch == 4)
 		ft_setenv(envp, prmtrs);
 	else if (ch == 5)
 		ft_unsetenv(envp, prmtrs);
 }
 
-int 	impl_cmd(char *cmd_name)
+int		impl_cmd(char *cmd_name)
 {
 	if (ft_strcmp(cmd_name, "env") == 0)
 		return (1);
@@ -66,33 +45,38 @@ int 	impl_cmd(char *cmd_name)
 		return (0);
 }
 
-void	my_exe(char *cmd, char **prmtrs, char **env)
+int		first_access(char *cmd, char **prmtrs, char **env)
 {
-	char	**paths;
-	int 	i;
-	char	*rlcmd;
-
-	paths = rec_env_paths(env);
-	i = -1;
 	if (access(cmd, 0) == 0)
 	{
 		if (access(cmd, 1) == 0)
 		{
 			execve(cmd, prmtrs, env);
-			return ;
+			return (1);
 		}
 	}
-	while (paths[++i])
+	return (0);
+}
+
+int		my_exe(char *cmd, char **prmtrs, char **env)
+{
+	char	**paths;
+
+	if (!(paths = rec_env_paths(env)))
 	{
-		rlcmd = path_cmd(cmd, paths[i]);
-		if (access(rlcmd, 0) == 0)
+		if (first_access(cmd, prmtrs, env) == 1)
+			return (1);
+		else
 		{
-			if (access(rlcmd, 1) == 0)
-			{
-				execve(rlcmd, prmtrs, env);
-				return ;
-			}
+			ft_printf("Permission denied or file not found\n");
+			return (0);
 		}
 	}
+	if (first_access(cmd, prmtrs, env) == 1)
+		return (1);
+	if (while_myexe(cmd, prmtrs, env, paths) == 1)
+		return (1);
+	free_dac(paths);
 	ft_printf("Permission denied or file not found\n");
+	return (0);
 }

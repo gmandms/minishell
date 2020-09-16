@@ -2,7 +2,7 @@
 
 void	prompt(char **env)
 {
-	int	i;
+	int		i;
 	char	*user_name;
 	char	*dir_name;
 	char	*home_name;
@@ -12,7 +12,7 @@ void	prompt(char **env)
 	{
 		if (ft_strncmp("USER", env[i], 4) == 0)
 			user_name = ft_strdup(env[i] + 5);
-		else if (ft_strncmp("HOME", env[i], 4) == 0)
+		else if (ft_strncmp("HOME=", env[i], 5) == 0)
 			home_name = ft_strdup(env[i] + 5);
 		else if (ft_strncmp("PWD", env[i], 3) == 0)
 			dir_name = cr_pwd(NULL);
@@ -29,11 +29,14 @@ void	prompt(char **env)
 	free(home_name);
 }
 
-int	main(int argc, char **argv, char **envp)
+int		main(int argc, char **argv, char **envp)
 {
 	char	*cmd_line;
 	char	**envcp;
+	int		i;
 
+	if (argc != 1)
+		return (0);
 	cr_env(&envcp, envp, argv);
 	while (1)
 	{
@@ -43,5 +46,14 @@ int	main(int argc, char **argv, char **envp)
 			ft_printf("");
 		else if (ft_strcmp(cmd_line, "\n") != 0 && !run_cmd(cmd_line, &envcp))
 			break ;
+		free(cmd_line);
 	}
+	i = 0;
+	while (envcp[i])
+	{
+		free(envcp[i]);
+		i++;
+	}
+	free(envcp);
+	return (0);
 }

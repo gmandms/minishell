@@ -1,45 +1,59 @@
 #include "minishell.h"
 
-void	for_trim(char const *cmd_line, char ***tmp_line, int size)
+void	for_trim(char *c_l, char ***tmp_line, int size)
 {
 	int		i;
-	int 	j;
+	int		j;
 
-	tmp_line[0] = malloc(sizeof(char*) * size + 1);
-	tmp_line[0][size] = NULL;
-	i = 0;
-	j = 0;
-	size = 0;
-	while (i <= ft_strlen(cmd_line))
+	init_fortrim(tmp_line, &i, &size);
+	while (i < ft_strlen(c_l))
 	{
-		if (cmd_line[i] == ' ' || cmd_line[i] == '\0')
+		j = forj(c_l, &i);
+		if (j > 0)
 		{
-			tmp_line[0][j] = ft_strnew(size);
-			ft_strncpy(tmp_line[0][j], &cmd_line[i - size], size);
-			size = 0;
-			j++;
+			if (is_space(c_l[i]))
+				i += frt_space(&c_l[i - j], tmp_line, &size, j);
+			else if (c_l[i] == '"')
+				i += frt_quote(&c_l[i + 1], tmp_line, &size, j);
+			else if (c_l[i] == '\0')
+				tmp_line[0][size] = ft_strdup(&c_l[i - j]);
 		}
-		if (cmd_line[i] != ' ' && cmd_line[i] != '\0' && cmd_line[i] != '\r')
-			size++;
-		i++;
+		else
+		{
+			if (is_space(c_l[i]))
+				i = nforspace(c_l, i);
+			else if (c_l[i] == '"')
+				i += frt_quote2(&c_l[i + 1], tmp_line, &size);
+		}
+		i = for_frtrim(i, tmp_line, c_l);
 	}
 }
 
-int		ft_trim(char const *cmd_line, char ***tmp_line)
+int		ft_trim(char *c_l, char ***tmp_line)
 {
 	int		i;
 	int		size;
+	int		j;
 
 	i = 0;
 	size = 0;
-	while (cmd_line[i])
+	while (c_l[i])
 	{
-		if (cmd_line[i] == ' ' || cmd_line[i + 1] == '\0')
-			size++;
-		i++;
+		j = forj(c_l, &i);
+		if (j > 0)
+			for_fttrim(c_l, &i, &size);
+		else
+		{
+			if (is_space(c_l[i]))
+				i = nforspace(c_l, i);
+			else if (c_l[i] == '"')
+				i = forquote(c_l, i, &size);
+		}
+		if (i == -1)
+			return (0);
 	}
 	if (size > 0)
-		for_trim(cmd_line, tmp_line, size);
+		for_trim(c_l, tmp_line, size);
 	return (size);
 }
 
@@ -54,30 +68,29 @@ char	*path_cmd(char *cmd, char *path)
 	return (str);
 }
 
-int 	run_cmd(char *cmd_line, char ***envp)
+int		run_cmd(char *cmd_line, char ***envp)
 {
 	char	*cmd;
 	char	**prmtrs;
 	char	**tmp_line;
 	int		size;
-	int		i;
 
 	size = ft_trim(cmd_line, &tmp_line);
 	if (size == 0)
 		return (1);
 	cmd = ft_strdup(tmp_line[0]);
-	i = -1;
 	if (size == 1 && ft_strcmp(cmd, "exit") == 0)
 		return (0);
-	prmtrs = malloc(sizeof(char*) * size + 1);
-	prmtrs[size] = NULL;
-	while (tmp_line[++i])
-		prmtrs[i] = ft_strdup(tmp_line[i]);
+	prmtrs = cr_prmtrs(tmp_line, size);
 	if (impl_cmd(cmd))
 		choice(cmd, prmtrs, envp);
 	else if (fork() != 0)
 		wait(NULL);
 	else
-		my_exe(cmd, prmtrs, envp[0]);
+	{
+		if (!my_exe(cmd, prmtrs, envp[0]))
+			return (0);
+	}
+	free_runcmd(cmd, prmtrs);
 	return (1);
 }
