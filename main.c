@@ -46,7 +46,6 @@ int		main(int argc, char **argv, char **envp)
 			ft_printf("");
 		else if (ft_strcmp(cmd_line, "\n") != 0 && !run_cmd(cmd_line, &envcp))
 			break ;
-		free(cmd_line);
 	}
 	i = 0;
 	while (envcp[i])

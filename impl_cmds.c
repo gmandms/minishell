@@ -69,6 +69,7 @@ int		my_exe(char *cmd, char **prmtrs, char **env)
 		else
 		{
 			ft_printf("Permission denied or file not found\n");
+			free_runcmd(cmd, prmtrs);
 			return (0);
 		}
 	}
@@ -78,5 +79,6 @@ int		my_exe(char *cmd, char **prmtrs, char **env)
 		return (1);
 	free_dac(paths);
 	ft_printf("Permission denied or file not found\n");
+	free_runcmd(cmd, prmtrs);
 	return (0);
 }
