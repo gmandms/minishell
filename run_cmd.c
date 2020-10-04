@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbump <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/16 13:31:11 by sbump             #+#    #+#             */
+/*   Updated: 2020/09/16 21:01:59 by sbump            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	for_trim(char *c_l, char ***tmp_line, int size)
@@ -68,7 +80,7 @@ char	*path_cmd(char *cmd, char *path)
 	return (str);
 }
 
-int		ft_exit(char **tmp_line, char *cmd, int  size)
+int		ft_exit(char **tmp_line, char *cmd, int size)
 {
 	if (size == 1 && ft_strcmp(cmd, "exit") == 0)
 	{

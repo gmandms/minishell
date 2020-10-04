@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbump <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/16 13:31:11 by sbump             #+#    #+#             */
+/*   Updated: 2020/09/16 21:01:59 by sbump            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*conc_dir(char *path, char *us_dir)
@@ -33,7 +45,10 @@ int		home_dir(char **env, char *path, char *old_pwd)
 	char	*pwd;
 
 	if (chdir(path) == -1)
+	{
+		free(old_pwd);
 		return (-1);
+	}
 	pwd = cr_pwd(NULL);
 	ch_env(env, pwd, "PWD");
 	free(pwd);
@@ -56,10 +71,7 @@ void	for_cd(char **prmtrs, char **env)
 		else if (ft_strcmp("~", prmtrs[1]) == 0)
 			r = home_dir(env, us_dir, cr_pwd(NULL));
 		else if (ft_strcmp("-", prmtrs[1]) == 0)
-		{
-			ft_printf("~\n");
-			r = home_dir(env, us_dir, cr_pwd(NULL));
-		}
+			r = fr_dash(env);
 		else
 			r = fr_else_fcd(prmtrs, us_dir, env);
 	}

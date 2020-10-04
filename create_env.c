@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbump <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/16 13:31:11 by sbump             #+#    #+#             */
+/*   Updated: 2020/09/16 21:01:59 by sbump            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	cr_env(char ***envcp, char **envp, char **argv)
@@ -8,7 +20,7 @@ void	cr_env(char ***envcp, char **envp, char **argv)
 	char	*shellname;
 
 	size = size_dac(envp);
-	envcp[0] = malloc(sizeof(char*) * size + 1);
+	envcp[0] = malloc(sizeof(char*) * (size + 1));
 	envcp[0][size] = NULL;
 	size = 0;
 	pwd = cr_pwd(NULL);

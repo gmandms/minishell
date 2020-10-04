@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbump <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/16 13:31:11 by sbump             #+#    #+#             */
+/*   Updated: 2020/09/16 21:01:59 by sbump            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_MINISHELL_H
 # define MINISHELL_MINISHELL_H
 
@@ -7,7 +19,10 @@
 # include <signal.h>
 # include <sys/types.h>
 # include <limits.h>
+# include <sys/stat.h>
 
+int		fr_dash(char **env);
+int		whatisit(char *name);
 void	ch_envlvl(char **arr, int i, char *varname);
 void	ch_env(char **arr, char *varargs, char *varname);
 void	read_cmdline(char **cmd_line);

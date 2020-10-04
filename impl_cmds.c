@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbump <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/16 13:31:11 by sbump             #+#    #+#             */
+/*   Updated: 2020/09/16 21:01:59 by sbump            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	env(char **envp)
@@ -47,12 +59,15 @@ int		impl_cmd(char *cmd_name)
 
 int		first_access(char *cmd, char **prmtrs, char **env)
 {
-	if (access(cmd, 0) == 0)
+	if (whatisit(cmd) == 2)
 	{
-		if (access(cmd, 1) == 0)
+		if (access(cmd, 0) == 0)
 		{
-			execve(cmd, prmtrs, env);
-			return (1);
+			if (access(cmd, 1) == 0)
+			{
+				execve(cmd, prmtrs, env);
+				return (1);
+			}
 		}
 	}
 	return (0);
